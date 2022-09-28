@@ -1,0 +1,52 @@
+{
+  "name": "web-ext-react-template",
+  "version": "1.0.2",
+  "private": true,
+  "scripts": {
+    "build": "ts-node -T src/build.ts --firefox --chrome",
+    "build:firefox": "ts-node -T src/build.ts --firefox",
+    "build:chrome": "ts-node -T src/build.ts --chrome",
+    "run:firefox": "web-ext run -s dist-firefox",
+    "run:chrome": "web-ext run -s dist-chrome -t chromium",
+    "package:firefox": "web-ext build -s dist-firefox --overwrite-dest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx && prettier --write .",
+    "lint:ts": "tsc --noEmit",
+    "prepare": "husky install",
+    "commit": "lint-staged -v"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "bash -c 'npm run lint:fix'",
+      "bash -c 'npm run lint:ts'"
+    ]
+  },
+  "dependencies": {
+    "esbuild": "^0.14.51",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "webextension-polyfill": "^0.9.0"
+  },
+  "devDependencies": {
+    "@emotion/eslint-plugin": "^11.7.0",
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@types/node": "^18.6.2",
+    "@types/react-dom": "^18.0.6",
+    "@types/webextension-polyfill": "^0.9.0",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "chokidar": "^3.5.3",
+    "csstype": "^3.1.0",
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^7.0.0",
+    "lint-staged": "^13.0.3",
+    "prettier": "2.7.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4",
+    "web-ext": "^7.1.1"
+  }
+}
