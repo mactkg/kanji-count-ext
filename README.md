@@ -85,5 +85,5 @@ Edit `build.ts` and configure [esbuild](https://esbuild.github.io/).
 Here is an article about this template.
 
 - <https://zenn.dev/htlsne/articles/web-ext-react-esbuild>
-ld
+  ld
 - <https://zenn.dev/sota_yamaguchi/articles/6e70026e1465e4>

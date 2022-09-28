@@ -7,6 +7,7 @@ const firefoxFlag = process.argv.includes('--firefox');
 
 const builder = new Builder({ watchFlag, devFlag, chromeFlag, firefoxFlag });
 builder.addBuildFile('src/popup/index.tsx');
+builder.addBuildFile('src/background/index.ts');
 builder.addStaticFile('src/popup/popup.html');
 builder.addStaticDir('icons');
 

@@ -1,6 +1,6 @@
 {
-  "name": "web-ext-react-template",
-  "version": "1.0.2",
+  "name": "kanji-rate-counter",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "ts-node -T src/build.ts --firefox --chrome",
@@ -31,6 +31,7 @@
     "@emotion/eslint-plugin": "^11.7.0",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
+    "@types/chrome": "^0.0.197",
     "@types/node": "^18.6.2",
     "@types/react-dom": "^18.0.6",
     "@types/webextension-polyfill": "^0.9.0",

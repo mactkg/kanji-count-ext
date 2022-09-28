@@ -6,10 +6,11 @@ import { ThemeProvider } from '@emotion/react';
 const theme = {
   typography: {
     h1: {
-      fontSize: '3rem',
+      fontSize: '1.5rem',
       lineHeight: 1.333,
       fontWeight: 500,
       letterSpacing: '-0.02083em',
+      margin: '0 0 1rem',
     },
     h2: {
       fontSize: '2.125rem',

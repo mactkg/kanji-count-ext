@@ -1,17 +1,21 @@
-import React, { FC, ReactNode } from 'react';
+import {
+  ChangeEvent,
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import styled from '@emotion/styled';
-import browser from 'webextension-polyfill';
 
-type ButtonProps = {
-  children: ReactNode;
-  onClick: () => void;
-};
+const DEFAULT_TEXT =
+  'あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。';
+const CACHE_KEY = 'kanjiCountCache';
 
 const Title = styled.h1((props) => {
   const { theme } = props;
   return {
     ...theme.typography.h1,
-    textAlign: 'center',
     color: theme.palette.text.primary,
   };
 });
@@ -19,33 +23,105 @@ const Title = styled.h1((props) => {
 const Wrapper = styled.section((props) => {
   const { theme } = props;
   return {
-    padding: '4em',
-    textAlign: 'center',
+    width: '400px',
+    padding: '1em',
     background: theme.palette.background.primary,
   };
 });
 
-const Button = styled.button((props) => {
-  const { theme } = props;
+const TextArea = styled.textarea(() => {
   return {
-    color: theme.palette.text.secondary,
+    width: '100%',
+    height: '300px',
   };
 });
 
-const CustomButton: FC<ButtonProps> = (props) => {
-  const { onClick } = props;
-  return <Button onClick={onClick}>Button</Button>;
+type ControlledTextAreaType = {
+  defaultText: string;
+  cacheKey?: string;
+  className?: string;
+};
+
+const useControlledTextArea = ({
+  defaultText,
+  cacheKey,
+  className,
+}: ControlledTextAreaType) => {
+  const [text, setText] = useState(defaultText);
+  const handleType = useCallback(
+    (e: ChangeEvent<HTMLTextAreaElement>) => {
+      const { value } = e.target;
+      setText(value);
+
+      // manage cache
+      if (cacheKey) {
+        chrome.runtime.sendMessage({
+          action: 'setCache',
+          cacheKey,
+          newValue: value,
+        });
+      }
+    },
+    [setText, cacheKey]
+  );
+
+  // manage cache
+  useEffect(() => {
+    chrome.runtime.sendMessage(
+      { action: 'loadCache', cacheKey },
+      ({ cache }) => {
+        if (cache) {
+          setText(cache);
+        }
+      }
+    );
+  }, [setText, cacheKey]);
+
+  const textarea = (
+    <TextArea
+      onChange={handleType}
+      value={text}
+      className={className}
+    ></TextArea>
+  );
+
+  return {
+    text,
+    setText,
+    textarea,
+  };
+};
+
+const useKanjiRate = (text: string) => {
+  const regex = useMemo(() => {
+    return /\p{scx=Han}/gu;
+  }, []);
+  const kanjiCount = useMemo(() => {
+    return text.match(regex)?.length || 0;
+  }, [text, regex]);
+
+  return {
+    textLength: text.length,
+    kanjiCount,
+    kanjiRate: kanjiCount / text.length || 0,
+  };
 };
 
 export const Popup: FC = () => {
-  const handleClick = () => {
-    browser.tabs.create({ url: 'https://example.com/' });
-  };
+  const { text, textarea } = useControlledTextArea({
+    defaultText: DEFAULT_TEXT,
+    cacheKey: CACHE_KEY,
+  });
+  const { textLength, kanjiCount, kanjiRate } = useKanjiRate(text);
+  const rateText = Math.round(kanjiRate * 1000) / 10;
 
   return (
     <Wrapper>
-      <Title>Hello World!</Title>
-      <CustomButton onClick={handleClick}>Button</CustomButton>
+      <Title>Kanji Counter</Title>
+      {textarea}
+      <p>
+        Count: {textLength} Kanji: {kanjiCount} Rate: {rateText} %
+      </p>
     </Wrapper>
   );
 };
