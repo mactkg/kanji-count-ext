@@ -1,6 +1,6 @@
 {
   "name": "kanji-rate-counter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "build": "ts-node -T src/build.ts --firefox --chrome",
