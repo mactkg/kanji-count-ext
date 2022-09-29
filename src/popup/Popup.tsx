@@ -94,7 +94,7 @@ const useControlledTextArea = ({
 
 const useKanjiRate = (text: string) => {
   const regex = useMemo(() => {
-    return /\p{scx=Han}/gu;
+    return /\p{sc=Han}/gu;
   }, []);
   const kanjiCount = useMemo(() => {
     return text.match(regex)?.length || 0;
